@@ -1,9 +1,7 @@
-
 const Navbar = (props) => {
   return (
     <>
-    
-    <nav className="nav-bar">
+      <nav className="nav-bar">
         <div className="logo">
           <span role="img">🍿</span>
           <h1>usePopcorn</h1>
@@ -13,16 +11,16 @@ const Navbar = (props) => {
           type="text"
           placeholder="Search movies..."
           value={props.query}
-          onChange={(e)=> props.setQuery(e.target.value)}
+          onChange={(e) => props.setQuery(e.target.value)}
         />
         <p className="num-results">
-          Found <strong>2</strong> results
+          Found{" "}
+          <strong>{props.result.length > 0 ? props.result.length : "0"}</strong>{" "}
+          results
         </p>
       </nav>
-
-    
     </>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

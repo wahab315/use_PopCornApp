@@ -1,16 +1,25 @@
 import { useState } from "react";
 import Navbar from "./components/Navbar";
 import SearchItem from "./components/SearchItem";
+import { useMovie } from "./hooks/useMovies";
+import Summary from "./components/Summary";
+import Loading from "./components/Loading";
+import ErrorMessage from "./components/ErrorMessage";
 
 function App() {
   const [inputQuery, setInputQuery] = useState("");
 
+  // custome Hooks
+
+  const { movies, isLoading, error } = useMovie(inputQuery);
+
   const [showSearchResult, setShowSearchResult] = useState(true);
   const [showWatchList, setShowWatchList] = useState(true);
 
+
   return (
     <>
-      <Navbar query={inputQuery} setQuery={setInputQuery} />
+      <Navbar query={inputQuery} setQuery={setInputQuery} result={movies} />
       <h1>{inputQuery}</h1>
       <main className="main">
         <div className="box">
@@ -22,9 +31,22 @@ function App() {
           </button>
 
           {showSearchResult && (
-            <ul className="list">
-              <SearchItem name="Spider man" year="2022" />
-            </ul>
+            <>
+              {isLoading && <Loading />}
+              <ul className="list">
+                {!isLoading &&
+                  !error &&
+                  movies?.map((item) => (
+                    <SearchItem
+                      key={item.imdbID}
+                      name={item.Title}
+                      image={item.Poster}
+                      year={item.Year}
+                    />
+                  ))}
+              </ul>
+              {error && <ErrorMessage message={error} />}
+            </>
           )}
         </div>
 
@@ -38,27 +60,7 @@ function App() {
 
           {showWatchList && (
             <>
-              <div className="summary">
-                <h2>Movies you watched</h2>
-                <div>
-                  <p>
-                    <span>#️⃣</span>
-                    <span>Movie length movies</span>
-                  </p>
-                  <p>
-                    <span>⭐️</span>
-                    <span>5</span>
-                  </p>
-                  <p>
-                    <span>🌟</span>
-                    <span>2</span>
-                  </p>
-                  <p>
-                    <span>⏳</span>
-                    <span>54 min</span>
-                  </p>
-                </div>
-              </div>
+              <Summary />
 
               {/* <ul className="list">
         {watched.map((movie) => (
